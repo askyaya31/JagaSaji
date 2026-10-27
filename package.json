@@ -1,0 +1,6 @@
+{
+  "name": "jagasaji",
+  "private": true,
+  "type": "module",
+  "scripts": { "test": "node --test test/logic.test.mjs" }
+}

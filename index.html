@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>JagaSaji | Pemantauan gizi dan keamanan pangan dapur sekolah</title>
+  <meta name="description" content="Prototipe pemantauan gizi menu dan keamanan pangan untuk dapur sekolah, dengan aturan HACCP, machine learning, dan deep learning.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@1,500&family=Montserrat:wght@400;500;600;700;800&display=swap">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="app">
+  <aside class="rail">
+    <div class="brand"><img src="img/logo.png" alt="" width="60" height="60"></span><strong>JagaSaji</strong></div>
+    <nav id="nav" aria-label="Navigasi utama">
+      <button data-view="ringkasan" class="active">Ringkasan</button>
+      <button data-view="gizi">Gizi menu</button>
+      <button data-view="keamanan">Keamanan pangan</button>
+      <button data-view="model">Model dan evaluasi</button>
+    </nav>
+    <p class="rail-note">Prototipe portofolio. Bukan alat keputusan keamanan pangan yang telah divalidasi.</p>
+  </aside>
+
+  <main>
+    <!-- RINGKASAN -->
+    <section id="view-ringkasan" class="view active">
+      <div class="dash">
+        <div>
+          <div id="verdict" class="hero" data-level="watch">
+            <div class="hero-copy">
+              <p class="tagline">Keputusan hari ini</p>
+              <h1 id="verdict-title">Perlu ditinjau</h1>
+              <p id="verdict-text"></p>
+              <div><button class="btn cta" data-go="keamanan">Nilai batch sekarang</button></div>
+            </div>
+            <div class="hero-art">
+              <img src="img/makanan-melayang.png" width="320" height="240" alt="" onerror="this.remove()">
+            </div>
+          </div>
+
+          <div class="tiles">
+            <article class="tile"><h3>Gizi menu</h3><div id="tile-gizi-status"></div><p id="tile-gizi-detail"></p><button class="btn ghost sm" data-go="gizi">Lihat detail</button></article>
+            <article class="tile"><h3>Keamanan pangan</h3><div id="tile-safe-status"></div><p id="tile-safe-detail"></p><button class="btn ghost sm" data-go="keamanan">Lihat detail</button></article>
+            <article class="tile"><h3>Suhu lemari dingin</h3><div id="tile-temp-status"></div><p id="tile-temp-detail"></p><button class="btn ghost sm" data-go="keamanan">Lihat detail</button></article>
+          </div>
+
+          <h2>Menu hari ini</h2>
+          <table class="ledger">
+            <thead><tr><th>Makanan</th><th class="num">Berat</th><th class="num">Kalori</th></tr></thead>
+            <tbody id="menu-mini"></tbody>
+          </table>
+        </div>
+
+        <aside class="side">
+          <h2>Tindakan yang perlu dilakukan</h2>
+          <ul id="actions" class="tasks"></ul>
+          <div class="sticky"><strong>Catatan</strong><br>Seluruh perhitungan dan pelatihan model berjalan di browser Anda. Tidak ada data yang dikirim ke server.</div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- GIZI -->
+    <section id="view-gizi" class="view">
+      <h1>Gizi menu</h1>
+      <p class="lead">Susun menu satu porsi. Nilai gizi dihitung dari berat tiap makanan.</p>
+      <div class="toolbar">
+        <label>Makanan <select id="food-select"></select></label>
+        <label>Berat (g) <input id="food-gram" type="number" min="10" step="10" value="100"></label>
+        <button id="food-add" class="btn">Tambah ke menu</button>
+        <button id="menu-reset" class="btn ghost">Kembalikan contoh</button>
+      </div>
+      <div class="scroll">
+        <table class="ledger">
+          <thead><tr><th>Makanan</th><th class="num">Berat (g)</th><th class="num">Kalori</th><th class="num">Protein (g)</th><th class="num">Lemak (g)</th><th class="num">Serat (g)</th><th></th></tr></thead>
+          <tbody id="menu-body"></tbody>
+          <tfoot id="menu-foot"></tfoot>
+        </table>
+      </div>
+      <h2>Penilaian</h2>
+      <div id="nutri-result"></div>
+      <h2>Pemenuhan terhadap target makan siang</h2>
+      <div id="target-bars"></div>
+    </section>
+
+    <!-- KEAMANAN -->
+    <section id="view-keamanan" class="view">
+      <h1>Keamanan pangan</h1>
+      <p class="lead">Nilai risiko satu batch makanan dan periksa log suhu penyimpanan.</p>
+      <h2>Penilaian batch</h2>
+      <div class="form-grid">
+        <label>Suhu penyimpanan (°C) <input id="suhu-simpan" type="number" value="65"></label>
+        <label>Jam sejak dimasak <input id="jam" type="number" value="2" min="0" step="0.5"></label>
+        <label>Suhu saat disajikan (°C) <input id="suhu-saji" type="number" value="62"></label>
+      </div>
+      <label class="check"><input type="checkbox" id="berisiko"> Mengandung bahan berisiko tinggi (santan, telur setengah matang, seafood, olahan susu)</label>
+      <fieldset>
+        <legend>Checklist higiene</legend>
+        <label class="check"><input type="checkbox" class="higiene" checked> Petugas mencuci tangan dan memakai APD</label>
+        <label class="check"><input type="checkbox" class="higiene" checked> Peralatan bersih, bahan mentah dan matang terpisah</label>
+        <label class="check"><input type="checkbox" class="higiene" checked> Bahan baku dari pemasok terverifikasi</label>
+        <label class="check"><input type="checkbox" class="higiene" checked> Air bersih tersedia, tempat sampah tertutup</label>
+        <label class="check"><input type="checkbox" class="higiene" checked> Wadah distribusi bersih dan tertutup</label>
+      </fieldset>
+      <button id="safety-run" class="btn">Nilai batch</button>
+      <div id="safety-result"></div>
+
+      <h2>Log suhu lemari dingin</h2>
+      <p class="lead">Satu pembacaan per jam, dipisah koma. Batas aman lemari dingin: 5 °C.</p>
+      <textarea id="temp-input" rows="3" aria-label="Pembacaan suhu"></textarea>
+      <div class="toolbar">
+        <button id="temp-normal" class="btn ghost">Isi data normal</button>
+        <button id="temp-fault" class="btn ghost">Isi data bermasalah</button>
+        <button id="temp-run" class="btn">Periksa suhu</button>
+      </div>
+      <div id="temp-result"></div>
+    </section>
+
+    <!-- MODEL -->
+    <section id="view-model" class="view">
+      <h1>Model dan evaluasi</h1>
+      <p class="lead">Dua model dilatih di browser dari data sintetis. Angka di bawah mengukur seberapa baik model menirukan aturan pembuat datanya, bukan kinerja di dapur sungguhan.</p>
+      <div id="model-info"></div>
+    </section>
+  </main>
+</div>
+<script type="module" src="js/app.js"></script>
+</body>
+</html>
